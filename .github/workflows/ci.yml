@@ -1,22 +1,30 @@
 
-name: Python CI
+name: Student Application CI
 
 on:
   push:
-  workflow_dispatch:
+    branches: [main, student-result-app]
+  pull_request:
+    branches: [main]
 
 jobs:
-  run-python:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.12"
 
-      - name: Run Python program
-        run: python hello.py
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build application
+        run: python -m compileall .
+
+      - name: Run automated tests
+        run: pytest
